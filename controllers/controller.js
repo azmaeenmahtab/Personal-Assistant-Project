@@ -55,12 +55,14 @@ const login = async (req, res) => {
             return res.status(400).json({ success: false, error: "Invalid password" });
         }
 
-        // Return user data (excluding password)
+        // Return user data (excluding password) and token in a single response
         const { password: _, ...userWithoutPassword } = user;
-        res.status(200).json({ success: true, user: userWithoutPassword });
-
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.status(200).json({ success: true, user: userWithoutPassword, token });
+        res.status(200).json({
+            success: true,
+            user: userWithoutPassword,
+            token
+        });
     } catch (err) {
         console.error("Login error:", err);
         res.status(500).json({ success: false, error: "Internal server error" });
