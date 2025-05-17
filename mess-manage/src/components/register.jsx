@@ -26,7 +26,7 @@ const body = {
 
 }
 
-const response = await fetch("link",{
+const response = await fetch("http://localhost:6543/api/register",{
     method:"POST",
     headers:{
         "Content-Type":"application/json"
@@ -51,7 +51,7 @@ setPhone("");
 setPassword("");
 setConfirmPassword("");
 
-Navigate('/assistant');
+Navigate('/login');
 
 }
 
