@@ -68,7 +68,14 @@ const login = async (req, res) => {
         res.status(500).json({ success: false, error: "Internal server error" });
     }
 }
+const budgetInput = async (req, res) => {
 
+    const { main_budget } = req.body;
+
+    db.query("INSERT INTO data (main_budget) VALUES ($1)", [main_budget]);
+
+
+}
 
 module.exports = {
     register,
