@@ -28,6 +28,10 @@ const Login = () => {
                 throw new Error(error.message || "Something went wrong in fetching");
             }
 
+            const data  = await response.json();
+            const token = data.token;
+            localStorage.setItem("token", token);
+
             alert("Login successful");
             setEmail("");
             setPassword("");

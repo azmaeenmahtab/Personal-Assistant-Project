@@ -9,6 +9,38 @@ const Plan1 = () => {
     const [amount, setAmount] = useState();
     const navigate = useNavigate();
 
+    const clickHandler = async () => {
+        try{
+
+            const token =  localStorage.getItem("token");
+
+        const body = {
+            "main_budget" : amount
+        }
+
+        const response = await fetch("http://localhost:6543/api/main_budget",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(body)
+        });
+
+        if(!response.ok){
+            const errorData = await response.json();
+            alert(errorData.message || "Something went wrong in fetching");
+            return;
+        }
+        setAmount("");
+        alert("Data saved successfully");
+        
+        navigate('/plan2');
+    }catch(error){
+        alert(error.message || "Something went wrong in fetching");
+    }
+    }
+
     return (
     <div>
           <div style={{display:'flex', gap:'20px'}}>
@@ -63,7 +95,7 @@ const Plan1 = () => {
         </div>
         <br /><br />
         <div>
-            <Button variant="contained" color="primary" onClick={() => navigate('/plan2')}>Next</Button>
+            <Button variant="contained" color="primary" onClick={clickHandler}>Next</Button>
         </div>
     </div>
     )
