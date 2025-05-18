@@ -2,10 +2,9 @@ const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
     try {
-        const token = req.header("Authentication")?.split(" ")[1];
+        const token = req.header("Authorization")?.split(" ")[1];
 
         if (!token) {
-
             return res.status(401).json({ success: false, error: "No token provided" });
         }
 
@@ -13,10 +12,8 @@ const authMiddleware = (req, res, next) => {
         req.user = decoded;
         next();
     } catch (err) {
-
         return res.status(400).json({ success: false, error: "Invalid token!!" });
     }
-
 }
 
 module.exports = authMiddleware;

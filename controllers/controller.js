@@ -69,17 +69,31 @@ const login = async (req, res) => {
     }
 }
 const budgetInput = async (req, res) => {
+    try {
 
-    const { main_budget } = req.body;
+        const userId = req.user.userId;
 
-    db.query("INSERT INTO data (main_budget) VALUES ($1)", [main_budget]);
+        const { main_budget } = req.body;
+
+        const result = await db.query("INSERT INTO data (user_id, main_budget) VALUES ($1, $2) RETURNING *", [userId, main_budget]);
+
+        if (result.rows.length === 0) {
+            return res.status(400).json({ success: false, error: "Failed to input Main Budget" });
+        }
+        res.status(200).json({ success: true, message: "Successfully inserted Main Budget", data: result.rows[0] });
+    } catch (err) {
+
+        return res.status(500).json({ success: false, error: "Internal server error" });
+    }
+
 
 
 }
 
 module.exports = {
     register,
-    login
+    login,
+    budgetInput
 }
 
 
