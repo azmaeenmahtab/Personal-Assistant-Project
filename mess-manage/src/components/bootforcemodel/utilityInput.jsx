@@ -6,10 +6,49 @@ import { useState } from 'react';
 
 const UtilityInput = () => {
     const navigate = useNavigate();
-    const [utility, setUtility] = useState();
+    const [utility, setUtility] = useState('');
 
-    const clickHandler = () => {
-        navigate('/transportInput');
+    const clickHandler = async () => {
+        try{
+            if(!utility || isNaN(utility)){
+
+                alert("Please enter a valid utility cost.");
+                return;
+            }
+
+
+            const token = localStorage.getItem("token");
+    
+            const body = {
+                "utility_cost" : parseFloat(utility)
+            };
+    
+            const response = await fetch("http://localhost:6543/api/utility_budget",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(body)
+            })
+    
+            if(!response.ok){
+                const Data = await response.json();
+                alert("Error Occured during api call" + data.message);
+                
+                return;
+            }
+    
+            alert("Utility cost inserted successfully");
+    
+            setUtility('');
+            navigate('/transportInput');
+    
+        }catch(err){
+    
+            alert("Internal server error" || err.message);
+        }
+        
     }
 
     return (
