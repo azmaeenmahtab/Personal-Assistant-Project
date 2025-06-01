@@ -8,8 +8,48 @@ const TransportInput = () => {
     const navigate = useNavigate();
     const [transport, setTransport] = useState();
 
-    const clickHandler = () => {
-        navigate('/dashboard');  // Navigate back to dashboard after completing all inputs
+    const clickHandler = async () => {try{
+        if(!transport || isNaN(transport)){
+
+            alert("Please enter a valid transport cost.");
+            return;
+        }
+
+
+        const token = localStorage.getItem("token");
+
+        const body = {
+            "transport_cost" : parseFloat(transport)
+        };
+
+        const response = await fetch("http://localhost:6543/api/transport_budget",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(body)
+        })
+
+        if(!response.ok){
+            const Data = await response.json();
+            alert("Error Occured during api call" + data.message);
+            
+            return;
+        }
+
+        alert("transport cost inserted successfully");
+
+        setTransport('');
+
+        navigate('/dashboard')
+         
+
+    }catch(err){
+
+        alert("Internal server error" || err.message);
+    }
+    
     }
 
     return (
