@@ -90,10 +90,41 @@ const budgetInput = async (req, res) => {
 
 }
 
+const rentalInput = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { rental_budget } = req.body;
+
+        const result = await db.query("UPDATE data SET seat_rent = $1 WHERE user_id = $2 RETURNING *", [rental_budget, userId]);
+
+        if (result.rows.length === 0) {
+            console.warn(`Attempted to update rental budget for user ${userId}, but no row found in data table.`);
+            return res.status(404).json({
+                success: false,
+                error: "User data not found or failed to update rental budget."
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Successfully updated rental data",
+            data: result.rows[0]
+        });
+
+    } catch (error) {
+        console.error("Rental input error:", error);
+        return res.status(500).json({
+            success: false,
+            error: "Internal server error"
+        });
+    }
+}
+
 module.exports = {
     register,
     login,
-    budgetInput
+    budgetInput,
+    rentalInput
 }
 
 

@@ -11,6 +11,7 @@ router.post("/login", apiController.login);
 
 router.post("/main_budget", authMiddleware, apiController.budgetInput);
 
+router.post("/rental_budget", authMiddleware, apiController.rentalInput);
 
 
 

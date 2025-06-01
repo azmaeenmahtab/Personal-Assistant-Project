@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 
+//authmiddleware mainly verify the token is valid or not , then returns the data that was encoded in the token
 const authMiddleware = (req, res, next) => {
     try {
         const token = req.header("Authorization")?.split(" ")[1];
