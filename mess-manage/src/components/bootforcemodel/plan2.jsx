@@ -7,13 +7,47 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Plan2 = () => {
+
     const navigate = useNavigate();
 
-    const [rental, setRental] = useState();
+    const [rental, setRental] = useState('');
 
-    const clickHandler = () => {
+    const clickHandler = async () => {
+        try{
+
+        const token =  localStorage.getItem("token");
+
+        const body = {
+             
+            "rental_budget" : rental
+        }
+
+        const response = await fetch("http://localhost:6543/api/rental_budget",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(body)
+        });
+
+        if(!response.ok){
+            const errorData = await response.json();
+            alert(errorData.message || "Something went wrong in fetching");
+            return;
+        }
+
+        alert("Rental added successfully");
+
+        setRental("");
 
         navigate('/plan3');
+    } catch (error) {
+         
+        alert(error.message || "Something went wrong in fetching");
+    }
+
+
     }
 
 
@@ -35,7 +69,7 @@ const Plan2 = () => {
             </div>
             <br /><br />
             <div>
-                <Button variant="contained" color="primary" onClick={clickHandler}>Next</Button>
+                <Button variant="contained" color="primary" value={rental} onClick={clickHandler}>Next</Button>
             </div>
         </div>
     )
